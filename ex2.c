@@ -15,7 +15,6 @@ int main() {
     int reg_choice = 0;
     int reg_input = 0;
     int reg_counter = 0;
-    int reg_status = 0;
     int reg_temp = 0;
 
     /* Task Specific Registers */
