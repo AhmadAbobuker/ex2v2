@@ -24,13 +24,15 @@ int main() {
         /////////////////////////////////////////////////
         ////choice&validity
         scanf("%d", &choice);
-        for (;;) {
-            if ((choice < 1) || (choice > 6)) {
-                printf("Invalid option, please try again\n");
-                scanf("%d", &choice);
-            } else {
-                break;
-            }
+
+        if (choice == 6) {
+            printf("Good night! See you at the pond tomorrow.\n");
+            return 0;
+        }
+
+        if (choice < 1 || choice > 6) {
+            printf("Invalid option, please try again\n");
+            continue;
         }
         ///////////////////////////////////////////////////
 
@@ -72,7 +74,7 @@ int main() {
                 scanf("%d", &ducks_num);
                 //////////////////////////////////////
                 ////validity check
-                while (ducks_num <= 0) {
+                while (ducks_num <= 0 || ducks_num > 64) {
                     printf("Invalid number, please try again\n");
                     scanf("%d", &ducks_num);
                 }
@@ -228,11 +230,6 @@ int main() {
                         temp = temp / 10;
                     }
                 }
-                break;
-            }
-
-            case 6: {
-                printf("Good night! See you at the pond tomorrow.\n");
                 break;
             }
         }
