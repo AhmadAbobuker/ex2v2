@@ -10,8 +10,6 @@ int main() {
     int choice = 0;
 
     while (choice != 6) {
-        ////////////////////////////////////////////////////////////
-        /////Main menu
         printf("Welcome to our games, please choose an option:\n");
         printf("1. Ducky's Unity Game\n");
         printf("2. The Memory Game\n");
@@ -19,10 +17,7 @@ int main() {
         printf("4. The Duck Parade\n");
         printf("5. The Mystery of the Repeated Digits\n");
         printf("6. Good Night Ducks\n");
-        ////////////////////////////////////////////////////////////
 
-        /////////////////////////////////////////////////
-        ////choice&validity
         scanf("%d", &choice);
 
         if (choice == 6) {
@@ -34,7 +29,6 @@ int main() {
             printf("Invalid option, please try again\n");
             continue;
         }
-        ///////////////////////////////////////////////////
 
         switch (choice) {
             case 1: {
@@ -43,10 +37,8 @@ int main() {
                 int i;
 
                 printf("please enter a positive number:\n");
-
-                ////////////////////////////////////////////
-                ///            Validity Check
                 scanf("%d", &unity_number);
+
                 for (;;) {
                     if (unity_number <= 0) {
                         printf("Invalid number, please try again\n");
@@ -55,16 +47,12 @@ int main() {
                         break;
                     }
                 }
-                ////////////////////////////////////////////
-                /////////Masking Phase in each bit to check the 1s
+
                 for (i = 0; i < 32; i++) {
-                    /* Using 1U to ensure we don't have signed overflow issues on bit 31 */
-                    if ((unity_number & (1U << i)) != 0) {
+                    if ((unity_number & (1 << i)) != 0) {
                         sumof1++;
                     }
                 }
-                /////////////////////////////////////////////////////////
-                ///
                 printf("Ducky earns %d corns\n", sumof1);
                 break;
             }
@@ -77,16 +65,13 @@ int main() {
 
                 printf("please enter the number of ducks:\n");
                 scanf("%d", &ducks_num);
-                //////////////////////////////////////
-                ////validity check
-                /* Fixed: <= 0 to prevent timeout sync issues, > 64 to prevent memory overflow */
+
                 while (ducks_num <= 0 || ducks_num > 64) {
                     printf("Invalid number, please try again\n");
                     scanf("%d", &ducks_num);
                 }
                 printf("you entered %d ducks\n", ducks_num);
-                ///////////////////////////////////////////
-                ///
+
                 for (i = 0; i < ducks_num; i++) {
                     printf("duck %d do QUAK? 1 for yes, 0 for no\n", i + 1);
                     scanf("%d", &duck_choice);
@@ -118,14 +103,12 @@ int main() {
 
                 printf("please enter the number\n");
                 scanf("%d", &professor_number);
-                //////////////////////////////////////
-                ////validity check
+
                 while (professor_number < 0) {
                     printf("Invalid number, please try again\n");
                     scanf("%d", &professor_number);
                 }
-                ///////////////////////////////////////////
-                ///
+
                 printf("please enter the exponent\n");
                 scanf("%d", &exponent);
                 while (exponent < 0) {
@@ -141,14 +124,6 @@ int main() {
             }
 
             case 4: {
-                //////////////////////////////////////////////////////////////////////////////
-                /*in this section of the program we need to excute the program in the next order
-                 a loop for drawing
-                 stages loop each stage corresponds with "number of lines" n
-                 n answers to mathmatics ,might be n%10 ?
-                 and an if statment if we are on any n above 0 not equal it mean new line is needed
-                 special case is the last loop last line  */
-                //////////////////////////////////////////////////////////////////////////////////
                 int ducks_number;
                 unsigned long long binary_data = 0;
                 unsigned long long upper;
@@ -157,8 +132,6 @@ int main() {
                 int spacing = 8;
                 int remainder;
 
-                ////////validity  checker
-                ///
                 printf("please enter number of ducks:\n");
                 scanf("%d", &ducks_number);
                 while (ducks_number <= 0) {
@@ -166,21 +139,8 @@ int main() {
                     scanf("%d", &ducks_number);
                 }
 
-                /////////////
-
-                /*in this program we need to save 2 kinds of informations
-                  how many times are we looping in 10s
-                  and how many variables does the last line has
-                  ill approach this storing data in a 64 bit integer
-                  the first 32 bits are going to be the number we have for 10s
-                  the last 32 bits are how many varibles are in the last line
-                  although its not effcient for memory since our first vairable is an int
-                  so obviously the memory storing could be done in 8-12 bits each but
-                  memory isnt the case of the assignment*/
-
-                upper = ducks_number / 10; // 32-bit upper
-                lower = ducks_number % 10; // 32-bit lower
-
+                upper = ducks_number / 10;
+                lower = ducks_number % 10;
                 binary_data = (upper << 32) | lower;
 
                 for (i = 0; i < (int)(binary_data >> 32); i++) {
