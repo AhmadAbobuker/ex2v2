@@ -15,6 +15,7 @@ int main() {
     int reg_choice = 0;
     int reg_input = 0;
     int reg_counter = 0;
+    int reg_status = 0;
     int reg_temp = 0;
 
     /* Task Specific Registers */
@@ -29,6 +30,7 @@ int main() {
     int t3_base = 0;
     int t3_exp = 0;
     int t3_res = 1;
+
     int t4_total = 0;
     int t4_row_len = 0;
     int t4_col_idx = 0;
@@ -209,13 +211,15 @@ TASK_4:
 
 T4_INPUT_GATE:
     if (scanf("%d", &t4_total) != 1) goto EXIT_LABEL;
-    if (t4_total <= 0) {
+
+    /* FIX: Allow 0 to be valid. Only reject negatives. */
+    if (t4_total < 0) {
         printf("Invalid number, please try again\n");
         goto T4_INPUT_GATE;
     }
 
 T4_ROW_START:
-    if (t4_total <= 0) goto MENU_LABEL; /* All ducks drawn */
+    if (t4_total <= 0) goto MENU_LABEL; /* Exit if 0 or finished */
 
     /* Logic: If remaining > 10, draw 10. Else draw remaining. */
     if (t4_total >= 10) {
