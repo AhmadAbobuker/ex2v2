@@ -7,41 +7,50 @@ Assignment: 2
 #include <stdio.h>
 
 int main() {
-    int choice = 0;
+    /* Main State Flags */
+    int game_active = 1;
+    int menu_choice = 0;
 
-    /* Variables for Task 1 */
-    int unity_number;
-    int sumof1;
-    int t1_i;
+    /* Task 1 Variables */
+    int t1_num = 0;
+    int t1_sum = 0;
+    int t1_i = 0;
 
-    /* Variables for Task 2 */
-    unsigned long long binary_dataset;
-    int duck_choice;
-    int ducks_num;
-    int t2_i;
+    /* Task 2 Variables */
+    int t2_count = 0;
+    int t2_curr_duck = 0;
+    int t2_type = 0;
+    int t2_i = 0;
+    unsigned long long t2_mask = 0;
 
-    /* Variables for Task 3 */
-    int professor_number;
-    int exponent;
-    int your_power;
-    int t3_i;
+    /* Task 3 Variables */
+    int t3_base = 0;
+    int t3_exp = 0;
+    int t3_res = 0;
+    int t3_i = 0;
 
-    /* Variables for Task 4 */
-    int ducks_number_t4;
-    unsigned long long binary_data;
-    unsigned long long upper;
-    unsigned long long lower;
-    int t4_i, t4_g, t4_s;
-    int spacing;
-    int remainder;
+    /* Task 4 Variables */
+    int t4_total = 0;
+    unsigned long long t4_pack = 0;
+    int t4_rows = 0;
+    int t4_rem = 0;
+    int t4_i = 0;
+    int t4_j = 0;
+    int t4_s = 0;
+    /* spacing constant defined as variable for C89 */
+    int t4_space = 8;
 
-    /* Variables for Task 5 */
-    int mystery_number;
-    int current_digit;
-    int temp;
+    /* Task 5 Variables */
+    int t5_num = 0;
+    int t5_curr = 0;
+    int t5_check = 0;
+    int t5_digit = 0;
 
-    /* The Main Infinite Loop - Logic Gate Style */
-    while (1) {
+    /* Main Logic Loop */
+    while (game_active == 1) {
+
+        /* Reset Menu Choice */
+        menu_choice = 0;
 
         /* ////////////////////////////////////////////////////////// */
         /* /////Main menu */
@@ -56,197 +65,234 @@ int main() {
 
         /* ///////////////////////////////////////////////// */
         /* ////choice&validity */
-        scanf("%d", &choice);
+        scanf("%d", &menu_choice);
+        /* /////////////////////////////////////////////////// */
 
-        /* Logic Gate: Check Exact Match for Exit */
-        if (choice == 6) {
+        /* Logic Gate 1: Check Exit */
+        if (menu_choice == 6) {
             printf("Good night! See you at the pond tomorrow.\n");
-            return 0;
+            game_active = 0;
         }
-
-        /* Logic Gate: Check Range */
-        if (choice < 1 || choice > 6) {
+        /* Logic Gate 2: Check Invalid Range */
+        else if (menu_choice < 1 || menu_choice > 6) {
             printf("Invalid option, please try again\n");
-            /* Force loop restart without using continue to avoid logic traps */
         }
+        /* Logic Gate 3: Valid Selection */
         else {
-            /* Valid Choice 1-5 enters Switch */
-            switch (choice) {
+            switch (menu_choice) {
                 case 1:
-                    sumof1 = 0;
+                    /* Reset Variables */
+                    t1_num = 0;
+                    t1_sum = 0;
+                    t1_i = 0;
+
                     printf("please enter a positive number:\n");
-                    scanf("%d", &unity_number);
+                    scanf("%d", &t1_num);
 
                     /* //////////////////////////////////////////// */
                     /* ///            Validity Check */
-                    while (unity_number <= 0) {
+                    while (t1_num <= 0) {
                         printf("Invalid number, please try again\n");
-                        scanf("%d", &unity_number);
+                        scanf("%d", &t1_num);
                     }
                     /* //////////////////////////////////////////// */
 
                     /* /////////Masking Phase in each bit to check the 1s */
                     for (t1_i = 0; t1_i < 32; t1_i++) {
-                        if ((unity_number & (1 << t1_i)) != 0) {
-                            sumof1++;
+                        if ((t1_num & (1 << t1_i)) != 0) {
+                            t1_sum++;
                         }
                     }
                     /* ///////////////////////////////////////////////////////// */
                     /* /// */
-                    printf("Ducky earns %d corns\n", sumof1);
+                    printf("Ducky earns %d corns\n", t1_sum);
                     break;
 
                 case 2:
-                    binary_dataset = 0;
+                    /* Reset Variables */
+                    t2_count = 0;
+                    t2_curr_duck = 0;
+                    t2_type = 0;
+                    t2_i = 0;
+                    t2_mask = 0;
+
                     printf("please enter the number of ducks:\n");
-                    scanf("%d", &ducks_num);
+                    scanf("%d", &t2_count);
 
                     /* ////////////////////////////////////// */
                     /* ////validity check */
-                    while (ducks_num <= 0 || ducks_num > 64) {
+                    /* Guard against 0, negative, and 64-bit overflow */
+                    while (t2_count <= 0 || t2_count > 64) {
                         printf("Invalid number, please try again\n");
-                        scanf("%d", &ducks_num);
+                        scanf("%d", &t2_count);
                     }
-                    printf("you entered %d ducks\n", ducks_num);
+                    printf("you entered %d ducks\n", t2_count);
                     /* /////////////////////////////////////////// */
                     /* /// */
 
-                    for (t2_i = 0; t2_i < ducks_num; t2_i++) {
-                        printf("duck %d do QUAK? 1 for yes, 0 for no\n", t2_i + 1);
-                        scanf("%d", &duck_choice);
+                    for (t2_i = 0; t2_i < t2_count; t2_i++) {
+                        t2_curr_duck = t2_i + 1;
+                        printf("duck %d do QUAK? 1 for yes, 0 for no\n", t2_curr_duck);
+                        scanf("%d", &t2_type);
 
-                        if (duck_choice == 0 || duck_choice == 1) {
-                            binary_dataset |= ((unsigned long long)duck_choice << t2_i);
+                        if (t2_type == 0 || t2_type == 1) {
+                            /* Bit packing logic */
+                            t2_mask = t2_mask | ((unsigned long long)t2_type << t2_i);
                         } else {
                             printf("Invalid number, please try again\n");
-                            t2_i--;
+                            t2_i--; /* Logic Gate: Retry this index */
                         }
                     }
 
-                    for (t2_i = 0; t2_i < ducks_num; t2_i++) {
-                        if (((binary_dataset >> t2_i) & 1) == 1) {
-                            printf("duck number %d do Quak\n", t2_i + 1);
+                    for (t2_i = 0; t2_i < t2_count; t2_i++) {
+                        t2_curr_duck = t2_i + 1;
+                        if (((t2_mask >> t2_i) & 1) == 1) {
+                            printf("duck number %d do Quak\n", t2_curr_duck);
                         } else {
-                            printf("duck number %d do Sh...\n", t2_i + 1);
+                            printf("duck number %d do Sh...\n", t2_curr_duck);
                         }
                     }
                     break;
 
                 case 3:
-                    your_power = 1;
+                    /* Reset Variables */
+                    t3_base = 0;
+                    t3_exp = 0;
+                    t3_res = 1;
+                    t3_i = 0;
+
                     printf("please enter the number\n");
-                    scanf("%d", &professor_number);
+                    scanf("%d", &t3_base);
                     /* ////////////////////////////////////// */
                     /* ////validity check */
-                    while (professor_number < 0) {
+                    while (t3_base < 0) {
                         printf("Invalid number, please try again\n");
-                        scanf("%d", &professor_number);
+                        scanf("%d", &t3_base);
                     }
                     /* /////////////////////////////////////////// */
 
                     printf("please enter the exponent\n");
-                    scanf("%d", &exponent);
-                    while (exponent < 0) {
+                    scanf("%d", &t3_exp);
+                    while (t3_exp < 0) {
                         printf("Invalid number, please try again\n");
-                        scanf("%d", &exponent);
+                        scanf("%d", &t3_exp);
                     }
 
-                    for (t3_i = 0; t3_i < exponent; t3_i++) {
-                        your_power = your_power * professor_number;
+                    for (t3_i = 0; t3_i < t3_exp; t3_i++) {
+                        t3_res = t3_res * t3_base;
                     }
-                    printf("your power is: %d\n", your_power);
+                    printf("your power is: %d\n", t3_res);
                     break;
 
                 case 4:
                     /* ////////////////////////////////////////////////////////////////////////////// */
-                    /* in this section of the program we need to excute the program in the next order... */
+                    /* in this section of the program we need to excute the program in the next order */
                     /* ////////////////////////////////////////////////////////////////////////////////// */
-                    binary_data = 0;
-                    spacing = 8;
+                    /* Reset Variables */
+                    t4_total = 0;
+                    t4_pack = 0;
+                    t4_rows = 0;
+                    t4_rem = 0;
+                    t4_i = 0;
+                    t4_j = 0;
+                    t4_s = 0;
 
                     /* ////////validity  checker */
                     /* /// */
                     printf("please enter number of ducks:\n");
-                    scanf("%d", &ducks_number_t4);
-                    while (ducks_number_t4 <= 0) {
+                    scanf("%d", &t4_total);
+                    while (t4_total <= 0) {
                         printf("Invalid number, please try again\n");
-                        scanf("%d", &ducks_number_t4);
+                        scanf("%d", &t4_total);
                     }
-
                     /* ///////////// */
-                    /* in this program we need to save 2 kinds of informations... */
 
-                    upper = ducks_number_t4 / 10;
-                    lower = ducks_number_t4 % 10;
+                    /* in this program we need to save 2 kinds of informations */
 
-                    binary_data = (upper << 32) | lower;
+                    /* Manual Bit Packing */
+                    t4_rows = t4_total / 10;
+                    t4_rem = t4_total % 10;
+                    t4_pack = ((unsigned long long)t4_rows << 32) | t4_rem;
 
-                    for (t4_i = 0; t4_i < (int)(binary_data >> 32); t4_i++) {
-                        for (t4_g = 0; t4_g < 10; t4_g++) {
+                    /* Loop for Full Rows */
+                    for (t4_i = 0; t4_i < (int)(t4_pack >> 32); t4_i++) {
+                        /* Line 1 */
+                        for (t4_j = 0; t4_j < 10; t4_j++) {
                             printf("   _");
                             printf("  ");
-                            for (t4_s = 0; t4_s < spacing; t4_s++) printf(" ");
+                            for (t4_s = 0; t4_s < t4_space; t4_s++) printf(" ");
                         }
                         printf("\n");
-                        for (t4_g = 0; t4_g < 10; t4_g++) {
+                        /* Line 2 */
+                        for (t4_j = 0; t4_j < 10; t4_j++) {
                             printf("__(o)>");
-                            for (t4_s = 0; t4_s < spacing; t4_s++) printf(" ");
+                            for (t4_s = 0; t4_s < t4_space; t4_s++) printf(" ");
                         }
                         printf("\n");
-                        for (t4_g = 0; t4_g < 10; t4_g++) {
+                        /* Line 3 */
+                        for (t4_j = 0; t4_j < 10; t4_j++) {
                             printf("\\___)");
                             printf(" ");
-                            for (t4_s = 0; t4_s < spacing; t4_s++) printf(" ");
+                            for (t4_s = 0; t4_s < t4_space; t4_s++) printf(" ");
                         }
                         printf("\n");
                     }
 
-                    remainder = (int)((binary_data << 32) >> 32);
+                    /* Loop for Remainder */
+                    t4_rem = (int)((t4_pack << 32) >> 32);
 
-                    for (t4_g = 0; t4_g < remainder; t4_g++) {
+                    /* Line 1 */
+                    for (t4_j = 0; t4_j < t4_rem; t4_j++) {
                         printf("   _");
                         printf("  ");
-                        for (t4_s = 0; t4_s < spacing; t4_s++) printf(" ");
+                        for (t4_s = 0; t4_s < t4_space; t4_s++) printf(" ");
                     }
                     printf("\n");
-                    for (t4_g = 0; t4_g < remainder; t4_g++) {
+                    /* Line 2 */
+                    for (t4_j = 0; t4_j < t4_rem; t4_j++) {
                         printf("__(o)>");
-                        for (t4_s = 0; t4_s < spacing; t4_s++) printf(" ");
+                        for (t4_s = 0; t4_s < t4_space; t4_s++) printf(" ");
                     }
                     printf("\n");
-                    for (t4_g = 0; t4_g < remainder; t4_g++) {
+                    /* Line 3 */
+                    for (t4_j = 0; t4_j < t4_rem; t4_j++) {
                         printf("\\___)");
                         printf(" ");
-                        for (t4_s = 0; t4_s < spacing; t4_s++) printf(" ");
+                        for (t4_s = 0; t4_s < t4_space; t4_s++) printf(" ");
                     }
                     printf("\n");
                     break;
 
                 case 5:
+                    /* Reset Variables */
+                    t5_num = 0;
+                    t5_curr = 0;
+                    t5_check = 0;
+                    t5_digit = 0;
+
                     printf("please enter number\n");
-                    scanf("%d", &mystery_number);
-                    while (mystery_number <= 0) {
+                    scanf("%d", &t5_num);
+                    while (t5_num <= 0) {
                         printf("Invalid number, please try again\n");
-                        scanf("%d", &mystery_number);
+                        scanf("%d", &t5_num);
                     }
 
-                    while (mystery_number > 0) {
-                        current_digit = mystery_number % 10;
-                        mystery_number = mystery_number / 10;
-                        temp = mystery_number;
+                    while (t5_num > 0) {
+                        t5_digit = t5_num % 10;
+                        t5_num = t5_num / 10;
 
-                        while (temp > 0) {
-                            if (temp % 10 == current_digit) {
-                                printf("%d appears more than once!\n", current_digit);
+                        t5_check = t5_num;
+                        while (t5_check > 0) {
+                            if (t5_check % 10 == t5_digit) {
+                                printf("%d appears more than once!\n", t5_digit);
                                 break;
                             }
-                            temp = temp / 10;
+                            t5_check = t5_check / 10;
                         }
                     }
                     break;
-            } /* End Switch */
-        } /* End Else */
-    } /* End While(1) */
-
+            }
+        }
+    }
     return 0;
 }
