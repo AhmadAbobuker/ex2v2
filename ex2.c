@@ -42,9 +42,9 @@ int main() {
 
     /* Task 5 Variables */
     int t5_num = 0;
-    int t5_curr = 0;
     int t5_check = 0;
     int t5_digit = 0;
+    int t5_temp = 0;
 
     /* Main Logic Loop */
     while (game_active == 1) {
@@ -266,9 +266,9 @@ int main() {
                 case 5:
                     /* Reset Variables */
                     t5_num = 0;
-                    t5_curr = 0;
                     t5_check = 0;
                     t5_digit = 0;
+                    t5_temp = 0;
 
                     printf("please enter number\n");
                     scanf("%d", &t5_num);
