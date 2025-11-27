@@ -7,275 +7,315 @@ Assignment: 2
 #include <stdio.h>
 
 int main() {
-    /* ==================================================== */
-    /* SYSTEM MEMORY REGISTERS                */
-    /* (All variables declared at top for stability)   */
-    /* ==================================================== */
+    /* ============================================================= */
+    /* CPU REGISTERS (Variables declared at very top for C89)       */
+    /* ============================================================= */
 
-    /* System Flags */
-    int system_active = 1;
-    int user_selection = 0;
+    /* General Purpose Registers */
+    int reg_choice = 0;
+    int reg_input = 0;
+    int reg_counter = 0;
+    int reg_temp = 0;
 
-    /* Register Bank: Task 1 (Unity Game) */
-    int t1_input_reg = 0;
-    int t1_counter_reg = 0;
-    int t1_loop_idx = 0;
+    /* Task Specific Registers */
+    int t1_bits = 0;
+    int t1_index = 0;
 
-    /* Register Bank: Task 2 (Memory Game) */
-    int t2_count_reg = 0;
-    int t2_type_reg = 0;
-    int t2_loop_idx = 0;
-    unsigned long long t2_storage_reg = 0;
-    int t2_display_idx = 0;
+    int t2_count = 0;
+    int t2_iter = 0;
+    int t2_val = 0;
+    unsigned long long t2_mem = 0;
 
-    /* Register Bank: Task 3 (Power Calc) */
-    int t3_base_reg = 0;
-    int t3_exp_reg = 0;
-    int t3_result_reg = 1;
-    int t3_loop_idx = 0;
-
-    /* Register Bank: Task 4 (Duck Parade) */
-    int t4_total_ducks = 0;
-    unsigned long long t4_packed_data = 0;
-    unsigned long long t4_high_bits = 0;
-    unsigned long long t4_low_bits = 0;
-    int t4_rows_count = 0;
-    int t4_rem_count = 0;
-    int t4_row_idx = 0;
-    int t4_draw_idx = 0;
+    int t3_base = 0;
+    int t3_exp = 0;
+    int t3_res = 1;
+    int t4_total = 0;
+    int t4_row_len = 0;
+    int t4_col_idx = 0;
     int t4_space_idx = 0;
-    int t4_tab_width = 8; /* Defined constant for spacing */
 
-    /* Register Bank: Task 5 (Repeated Digits) */
-    int t5_main_num = 0;
-    int t5_target_digit = 0;
-    int t5_scanner_num = 0;
+    int t5_num = 0;
+    int t5_digit = 0;
+    int t5_scan = 0;
+    int t5_sub_scan = 0;
 
-    /* ==================================================== */
-    /* MAIN LOGIC GATE                     */
-    /* ==================================================== */
+    /* ============================================================= */
+    /* PROGRAM START (LOGIC ENTRY)                                  */
+    /* ============================================================= */
 
-    while (system_active == 1) {
+MENU_LABEL:
+    /* 1. Display Interface */
+    printf("Welcome to our games, please choose an option:\n");
+    printf("1. Ducky's Unity Game\n");
+    printf("2. The Memory Game\n");
+    printf("3. Professor Pat's Power Calculation\n");
+    printf("4. The Duck Parade\n");
+    printf("5. The Mystery of the Repeated Digits\n");
+    printf("6. Good Night Ducks\n");
 
-        /* GATE: Menu Display */
-        printf("Welcome to our games, please choose an option:\n");
-        printf("1. Ducky's Unity Game\n");
-        printf("2. The Memory Game\n");
-        printf("3. Professor Pat's Power Calculation\n");
-        printf("4. The Duck Parade\n");
-        printf("5. The Mystery of the Repeated Digits\n");
-        printf("6. Good Night Ducks\n");
+    /* 2. Input Gate */
+    /* SAFETY: If scanf returns not 1, input stream died. Jump to EXIT. */
+    if (scanf("%d", &reg_choice) != 1) goto EXIT_LABEL;
 
-        /* GATE: Input Capture */
-        scanf("%d", &user_selection);
+    /* 3. Logic Routing (Simulating Switch/If Chains) */
+    if (reg_choice == 6) goto EXIT_LABEL;
+    if (reg_choice == 1) goto TASK_1;
+    if (reg_choice == 2) goto TASK_2;
+    if (reg_choice == 3) goto TASK_3;
+    if (reg_choice == 4) goto TASK_4;
+    if (reg_choice == 5) goto TASK_5;
 
-        /* GATE: Routing Logic */
-        if (user_selection == 6) {
-            /* EXIT SIGNAL */
-            printf("Good night! See you at the pond tomorrow.\n");
-            system_active = 0;
-        }
-        else if (user_selection < 1 || user_selection > 6) {
-            /* ERROR SIGNAL */
-            printf("Invalid option, please try again\n");
-        }
-        else {
-            /* PROCESS SIGNAL */
-            switch (user_selection) {
+    /* Fallthrough: Invalid Input */
+    printf("Invalid option, please try again\n");
+    goto MENU_LABEL; /* Jump back to start */
 
-                /* ================= CASE 1 ================= */
-                case 1:
-                    t1_counter_reg = 0; /* Reset Counter */
+    /* ============================================================= */
+    /* TASK 1: DUCKY'S UNITY GAME (BIT LOGIC)                       */
+    /* ============================================================= */
+TASK_1:
+    printf("please enter a positive number:\n");
 
-                    printf("please enter a positive number:\n");
-                    scanf("%d", &t1_input_reg);
-
-                    /* VALIDATION LOOP GATE */
-                    while (t1_input_reg <= 0) {
-                        printf("Invalid number, please try again\n");
-                        scanf("%d", &t1_input_reg);
-                    }
-
-                    /* BITWISE OPERATION GATE */
-                    for (t1_loop_idx = 0; t1_loop_idx < 32; t1_loop_idx++) {
-                        if ((t1_input_reg & (1 << t1_loop_idx)) != 0) {
-                            t1_counter_reg++;
-                        }
-                    }
-
-                    printf("Ducky earns %d corns\n", t1_counter_reg);
-                    break;
-
-                /* ================= CASE 2 ================= */
-                case 2:
-                    t2_storage_reg = 0; /* Clear Memory */
-
-                    printf("please enter the number of ducks:\n");
-                    scanf("%d", &t2_count_reg);
-
-                    /* VALIDATION LOOP GATE (+Overflow Protection) */
-                    while (t2_count_reg <= 0 || t2_count_reg > 64) {
-                        printf("Invalid number, please try again\n");
-                        scanf("%d", &t2_count_reg);
-                    }
-
-                    printf("you entered %d ducks\n", t2_count_reg);
-
-                    /* INPUT STORAGE GATE */
-                    for (t2_loop_idx = 0; t2_loop_idx < t2_count_reg; t2_loop_idx++) {
-                        printf("duck %d do QUAK? 1 for yes, 0 for no\n", t2_loop_idx + 1);
-                        scanf("%d", &t2_type_reg);
-
-                        if (t2_type_reg == 0 || t2_type_reg == 1) {
-                            /* Low-Level Bit Packing */
-                            t2_storage_reg = t2_storage_reg | ((unsigned long long)t2_type_reg << t2_loop_idx);
-                        } else {
-                            printf("Invalid number, please try again\n");
-                            t2_loop_idx--; /* Logic Rewind */
-                        }
-                    }
-
-                    /* OUTPUT READ GATE */
-                    for (t2_loop_idx = 0; t2_loop_idx < t2_count_reg; t2_loop_idx++) {
-                        t2_display_idx = t2_loop_idx + 1;
-                        if (((t2_storage_reg >> t2_loop_idx) & 1) == 1) {
-                            printf("duck number %d do Quak\n", t2_display_idx);
-                        } else {
-                            printf("duck number %d do Sh...\n", t2_display_idx);
-                        }
-                    }
-                    break;
-
-                /* ================= CASE 3 ================= */
-                case 3:
-                    t3_result_reg = 1; /* Reset Multiplier Identity */
-
-                    printf("please enter the number\n");
-                    scanf("%d", &t3_base_reg);
-
-                    /* BASE VALIDATION GATE */
-                    while (t3_base_reg < 0) {
-                        printf("Invalid number, please try again\n");
-                        scanf("%d", &t3_base_reg);
-                    }
-
-                    printf("please enter the exponent\n");
-                    scanf("%d", &t3_exp_reg);
-
-                    /* EXPONENT VALIDATION GATE */
-                    while (t3_exp_reg < 0) {
-                        printf("Invalid number, please try again\n");
-                        scanf("%d", &t3_exp_reg);
-                    }
-
-                    /* MULTIPLICATION GATE */
-                    for (t3_loop_idx = 0; t3_loop_idx < t3_exp_reg; t3_loop_idx++) {
-                        t3_result_reg = t3_result_reg * t3_base_reg;
-                    }
-
-                    printf("your power is: %d\n", t3_result_reg);
-                    break;
-
-                /* ================= CASE 4 ================= */
-                case 4:
-                    printf("please enter number of ducks:\n");
-                    scanf("%d", &t4_total_ducks);
-
-                    /* VALIDATION GATE */
-                    while (t4_total_ducks <= 0) {
-                        printf("Invalid number, please try again\n");
-                        scanf("%d", &t4_total_ducks);
-                    }
-
-                    /* DATA PACKING GATE (Manual Register Management) */
-                    t4_high_bits = t4_total_ducks / 10;
-                    t4_low_bits = t4_total_ducks % 10;
-                    t4_packed_data = (t4_high_bits << 32) | t4_low_bits;
-
-                    /* UNPACKING GATE 1: FULL ROWS */
-                    t4_rows_count = (int)(t4_packed_data >> 32);
-
-                    for (t4_row_idx = 0; t4_row_idx < t4_rows_count; t4_row_idx++) {
-                        /* Layer 1 */
-                        for (t4_draw_idx = 0; t4_draw_idx < 10; t4_draw_idx++) {
-                            printf("   _");
-                            printf("  ");
-                            for (t4_space_idx = 0; t4_space_idx < t4_tab_width; t4_space_idx++) printf(" ");
-                        }
-                        printf("\n");
-                        /* Layer 2 */
-                        for (t4_draw_idx = 0; t4_draw_idx < 10; t4_draw_idx++) {
-                            printf("__(o)>");
-                            for (t4_space_idx = 0; t4_space_idx < t4_tab_width; t4_space_idx++) printf(" ");
-                        }
-                        printf("\n");
-                        /* Layer 3 */
-                        for (t4_draw_idx = 0; t4_draw_idx < 10; t4_draw_idx++) {
-                            printf("\\___)");
-                            printf(" ");
-                            for (t4_space_idx = 0; t4_space_idx < t4_tab_width; t4_space_idx++) printf(" ");
-                        }
-                        printf("\n");
-                    }
-
-                    /* UNPACKING GATE 2: REMAINDER */
-                    t4_rem_count = (int)((t4_packed_data << 32) >> 32);
-
-                    /* Layer 1 */
-                    for (t4_draw_idx = 0; t4_draw_idx < t4_rem_count; t4_draw_idx++) {
-                        printf("   _");
-                        printf("  ");
-                        for (t4_space_idx = 0; t4_space_idx < t4_tab_width; t4_space_idx++) printf(" ");
-                    }
-                    printf("\n");
-                    /* Layer 2 */
-                    for (t4_draw_idx = 0; t4_draw_idx < t4_rem_count; t4_draw_idx++) {
-                        printf("__(o)>");
-                        for (t4_space_idx = 0; t4_space_idx < t4_tab_width; t4_space_idx++) printf(" ");
-                    }
-                    printf("\n");
-                    /* Layer 3 */
-                    for (t4_draw_idx = 0; t4_draw_idx < t4_rem_count; t4_draw_idx++) {
-                        printf("\\___)");
-                        printf(" ");
-                        for (t4_space_idx = 0; t4_space_idx < t4_tab_width; t4_space_idx++) printf(" ");
-                    }
-                    printf("\n");
-                    break;
-
-                /* ================= CASE 5 ================= */
-                case 5:
-                    printf("please enter number\n");
-                    scanf("%d", &t5_main_num);
-
-                    /* VALIDATION GATE */
-                    while (t5_main_num <= 0) {
-                        printf("Invalid number, please try again\n");
-                        scanf("%d", &t5_main_num);
-                    }
-
-                    /* REVERSE SCANNING LOGIC */
-                    while (t5_main_num > 0) {
-                        /* Latch current LSB */
-                        t5_target_digit = t5_main_num % 10;
-                        /* Shift Right */
-                        t5_main_num = t5_main_num / 10;
-
-                        /* Load Scanner */
-                        t5_scanner_num = t5_main_num;
-
-                        /* Inner Scan Loop */
-                        while (t5_scanner_num > 0) {
-                            if (t5_scanner_num % 10 == t5_target_digit) {
-                                printf("%d appears more than once!\n", t5_target_digit);
-                                break; /* Short Circuit */
-                            }
-                            t5_scanner_num = t5_scanner_num / 10;
-                        }
-                    }
-                    break;
-            }
-        }
+T1_INPUT_GATE:
+    if (scanf("%d", &reg_input) != 1) goto EXIT_LABEL;
+    if (reg_input <= 0) {
+        printf("Invalid number, please try again\n");
+        goto T1_INPUT_GATE;
     }
+
+    /* Bitwise Logic Gate */
+    t1_bits = 0;
+    t1_index = 0;
+
+T1_LOOP_START:
+    if (t1_index >= 32) goto T1_END; /* Loop Condition */
+
+    /* Logic Gate: AND operation */
+    if ((reg_input & (1 << t1_index)) != 0) {
+        t1_bits++;
+    }
+    t1_index++;
+    goto T1_LOOP_START;
+
+T1_END:
+    printf("Ducky earns %d corns\n", t1_bits);
+    goto MENU_LABEL;
+
+
+    /* ============================================================= */
+    /* TASK 2: THE MEMORY GAME (REGISTER STORAGE)                   */
+    /* ============================================================= */
+TASK_2:
+    t2_mem = 0;
+    printf("please enter the number of ducks:\n");
+
+T2_INPUT_GATE:
+    if (scanf("%d", &t2_count) != 1) goto EXIT_LABEL;
+    /* Logic: (A <= 0) OR (A > 64) -> Error */
+    if (t2_count <= 0) goto T2_ERROR;
+    if (t2_count > 64) goto T2_ERROR;
+    goto T2_VALID;
+
+T2_ERROR:
+    printf("Invalid number, please try again\n");
+    goto T2_INPUT_GATE;
+
+T2_VALID:
+    printf("you entered %d ducks\n", t2_count);
+    t2_iter = 0;
+
+T2_READ_LOOP:
+    if (t2_iter >= t2_count) goto T2_PRINT_PHASE;
+
+    printf("duck %d do QUAK? 1 for yes, 0 for no\n", t2_iter + 1);
+    if (scanf("%d", &t2_val) != 1) goto EXIT_LABEL;
+
+    if (t2_val == 1) {
+        /* Set Bit Logic */
+        t2_mem = t2_mem | ((unsigned long long)1 << t2_iter);
+        t2_iter++;
+        goto T2_READ_LOOP;
+    }
+    if (t2_val == 0) {
+        /* Zero Bit Logic (Do nothing, just advance) */
+        t2_iter++;
+        goto T2_READ_LOOP;
+    }
+
+    /* Fallthrough: Invalid binary input */
+    printf("Invalid number, please try again\n");
+    goto T2_READ_LOOP; /* Retry same index (t2_iter not incremented) */
+
+T2_PRINT_PHASE:
+    t2_iter = 0;
+
+T2_PRINT_LOOP:
+    if (t2_iter >= t2_count) goto MENU_LABEL;
+
+    reg_temp = t2_iter + 1; /* 1-based index */
+
+    /* Check Bit Gate */
+    if (((t2_mem >> t2_iter) & 1) == 1) {
+        printf("duck number %d do Quak\n", reg_temp);
+    } else {
+        printf("duck number %d do Sh...\n", reg_temp);
+    }
+
+    t2_iter++;
+    goto T2_PRINT_LOOP;
+
+
+    /* ============================================================= */
+    /* TASK 3: POWER CALCULATION (MULTIPLICATION GATE)              */
+    /* ============================================================= */
+TASK_3:
+    printf("please enter the number\n");
+
+T3_BASE_GATE:
+    if (scanf("%d", &t3_base) != 1) goto EXIT_LABEL;
+    if (t3_base < 0) {
+        printf("Invalid number, please try again\n");
+        goto T3_BASE_GATE;
+    }
+
+    printf("please enter the exponent\n");
+
+T3_EXP_GATE:
+    if (scanf("%d", &t3_exp) != 1) goto EXIT_LABEL;
+    if (t3_exp < 0) {
+        printf("Invalid number, please try again\n");
+        goto T3_EXP_GATE;
+    }
+
+    /* Calculation Logic */
+    t3_res = 1;
+    reg_counter = 0;
+
+T3_CALC_LOOP:
+    if (reg_counter >= t3_exp) goto T3_END;
+    t3_res = t3_res * t3_base;
+    reg_counter++;
+    goto T3_CALC_LOOP;
+
+T3_END:
+    printf("your power is: %d\n", t3_res);
+    goto MENU_LABEL;
+
+
+    /* ============================================================= */
+    /* TASK 4: THE DUCK PARADE (DISPLAY CONTROLLER)                 */
+    /* ============================================================= */
+TASK_4:
+    printf("please enter number of ducks:\n");
+
+T4_INPUT_GATE:
+    if (scanf("%d", &t4_total) != 1) goto EXIT_LABEL;
+    if (t4_total <= 0) {
+        printf("Invalid number, please try again\n");
+        goto T4_INPUT_GATE;
+    }
+
+T4_ROW_START:
+    if (t4_total <= 0) goto MENU_LABEL; /* All ducks drawn */
+
+    /* Logic: If remaining > 10, draw 10. Else draw remaining. */
+    if (t4_total >= 10) {
+        t4_row_len = 10;
+    } else {
+        t4_row_len = t4_total;
+    }
+
+    /* --- LINE 1 GENERATOR --- */
+    t4_col_idx = 0;
+T4_L1_LOOP:
+    if (t4_col_idx >= t4_row_len) goto T4_L1_END;
+    printf("   _");
+    printf("  "); /* 2 spaces */
+    /* 8 spaces loop hardcoded */
+    t4_space_idx = 0;
+T4_S1: if (t4_space_idx >= 8) goto T4_S1_DONE; printf(" "); t4_space_idx++; goto T4_S1;
+T4_S1_DONE:
+    t4_col_idx++;
+    goto T4_L1_LOOP;
+T4_L1_END:
+    printf("\n");
+
+    /* --- LINE 2 GENERATOR --- */
+    t4_col_idx = 0;
+T4_L2_LOOP:
+    if (t4_col_idx >= t4_row_len) goto T4_L2_END;
+    printf("__(o)>");
+    /* 8 spaces loop hardcoded */
+    t4_space_idx = 0;
+T4_S2: if (t4_space_idx >= 8) goto T4_S2_DONE; printf(" "); t4_space_idx++; goto T4_S2;
+T4_S2_DONE:
+    t4_col_idx++;
+    goto T4_L2_LOOP;
+T4_L2_END:
+    printf("\n");
+
+    /* --- LINE 3 GENERATOR --- */
+    t4_col_idx = 0;
+T4_L3_LOOP:
+    if (t4_col_idx >= t4_row_len) goto T4_L3_END;
+    printf("\\___)");
+    printf(" "); /* 1 space */
+    /* 8 spaces loop hardcoded */
+    t4_space_idx = 0;
+T4_S3: if (t4_space_idx >= 8) goto T4_S3_DONE; printf(" "); t4_space_idx++; goto T4_S3;
+T4_S3_DONE:
+    t4_col_idx++;
+    goto T4_L3_LOOP;
+T4_L3_END:
+    printf("\n");
+
+    /* Decrement Counter */
+    t4_total = t4_total - 10;
+    goto T4_ROW_START;
+
+
+    /* ============================================================= */
+    /* TASK 5: REPEATED DIGITS (REVERSE SCANNER)                    */
+    /* ============================================================= */
+TASK_5:
+    printf("please enter number\n");
+
+T5_INPUT_GATE:
+    if (scanf("%d", &t5_num) != 1) goto EXIT_LABEL;
+    if (t5_num <= 0) {
+        printf("Invalid number, please try again\n");
+        goto T5_INPUT_GATE;
+    }
+
+T5_OUTER_LOOP:
+    if (t5_num <= 0) goto MENU_LABEL;
+
+    /* Get LSB */
+    t5_digit = t5_num % 10;
+
+    /* Shift Right */
+    t5_num = t5_num / 10;
+
+    /* Load Sub-Scanner */
+    t5_scan = t5_num;
+
+T5_INNER_LOOP:
+    if (t5_scan <= 0) goto T5_OUTER_LOOP; /* No duplicates found for this digit */
+
+    t5_sub_scan = t5_scan % 10;
+
+    if (t5_sub_scan == t5_digit) {
+        printf("%d appears more than once!\n", t5_digit);
+        goto T5_OUTER_LOOP; /* Found it, move to next digit */
+    }
+
+    t5_scan = t5_scan / 10;
+    goto T5_INNER_LOOP;
+
+
+    /* ============================================================= */
+    /* EXIT GATE                                                    */
+    /* ============================================================= */
+EXIT_LABEL:
+    printf("Good night! See you at the pond tomorrow.\n");
     return 0;
 }
