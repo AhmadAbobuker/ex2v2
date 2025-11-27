@@ -25,29 +25,29 @@ int main() {
         ////choice&validity
         scanf("%d", &choice);
 
-        // Edge case: Handle 6 immediately to exit clean
         if (choice == 6) {
             printf("Good night! See you at the pond tomorrow.\n");
             return 0;
         }
 
-        // Edge case: Handle invalid inputs (including 0 and negatives)
         if (choice < 1 || choice > 6) {
             printf("Invalid option, please try again\n");
-            continue; // Go back to printing the menu immediately
+            continue;
         }
         ///////////////////////////////////////////////////
 
         switch (choice) {
             case 1: {
-                printf("please enter a positive number:\n");
                 int unity_number;
+                int sumof1 = 0;
+                int i;
+
+                printf("please enter a positive number:\n");
 
                 ////////////////////////////////////////////
                 ///            Validity Check
                 scanf("%d", &unity_number);
                 for (;;) {
-                    // Edge case: Instructions say "positive", so 0 is invalid
                     if (unity_number <= 0) {
                         printf("Invalid number, please try again\n");
                         scanf("%d", &unity_number);
@@ -57,9 +57,9 @@ int main() {
                 }
                 ////////////////////////////////////////////
                 /////////Masking Phase in each bit to check the 1s
-                int sumof1 = 0;
-                for (int i = 0; i < 32; i++) {
-                    if ((unity_number & (1 << i)) != 0) {
+                for (i = 0; i < 32; i++) {
+                    /* Using 1U to ensure we don't have signed overflow issues on bit 31 */
+                    if ((unity_number & (1U << i)) != 0) {
                         sumof1++;
                     }
                 }
@@ -73,11 +73,13 @@ int main() {
                 unsigned long long binary_dataset = 0;
                 int duck_choice;
                 int ducks_num;
+                int i;
+
                 printf("please enter the number of ducks:\n");
                 scanf("%d", &ducks_num);
                 //////////////////////////////////////
                 ////validity check
-                // Edge case: Must be positive AND <= 64 to fit in unsigned long long
+                /* Fixed: <= 0 to prevent timeout sync issues, > 64 to prevent memory overflow */
                 while (ducks_num <= 0 || ducks_num > 64) {
                     printf("Invalid number, please try again\n");
                     scanf("%d", &ducks_num);
@@ -85,7 +87,7 @@ int main() {
                 printf("you entered %d ducks\n", ducks_num);
                 ///////////////////////////////////////////
                 ///
-                for (int i = 0; i < ducks_num; i++) {
+                for (i = 0; i < ducks_num; i++) {
                     printf("duck %d do QUAK? 1 for yes, 0 for no\n", i + 1);
                     scanf("%d", &duck_choice);
 
@@ -97,7 +99,7 @@ int main() {
                     }
                 }
 
-                for (int i = 0; i < ducks_num; i++) {
+                for (i = 0; i < ducks_num; i++) {
                     if (((binary_dataset >> i) & 1) == 1) {
                         printf("duck number %d do Quak\n", i + 1);
                     }
@@ -109,8 +111,12 @@ int main() {
             }
 
             case 3: {
-                printf("please enter the number\n");
                 int professor_number = 0;
+                int exponent = 0;
+                int your_power = 1;
+                int i;
+
+                printf("please enter the number\n");
                 scanf("%d", &professor_number);
                 //////////////////////////////////////
                 ////validity check
@@ -120,15 +126,14 @@ int main() {
                 }
                 ///////////////////////////////////////////
                 ///
-                int exponent = 0;
                 printf("please enter the exponent\n");
                 scanf("%d", &exponent);
                 while (exponent < 0) {
                     printf("Invalid number, please try again\n");
                     scanf("%d", &exponent);
                 }
-                int your_power = 1;
-                for (int i = 0; i < exponent; i++) {
+
+                for (i = 0; i < exponent; i++) {
                     your_power = your_power * professor_number;
                 }
                 printf("your power is: %d\n", your_power);
@@ -145,6 +150,13 @@ int main() {
                  special case is the last loop last line  */
                 //////////////////////////////////////////////////////////////////////////////////
                 int ducks_number;
+                unsigned long long binary_data = 0;
+                unsigned long long upper;
+                unsigned long long lower;
+                int i, g, s;
+                int spacing = 8;
+                int remainder;
+
                 ////////validity  checker
                 ///
                 printf("please enter number of ducks:\n");
@@ -165,58 +177,57 @@ int main() {
                   although its not effcient for memory since our first vairable is an int
                   so obviously the memory storing could be done in 8-12 bits each but
                   memory isnt the case of the assignment*/
-                unsigned long long binary_data = 0;
-                unsigned long long upper = ducks_number / 10; // 32-bit upper
-                unsigned long long lower = ducks_number % 10; // 32-bit lower
+
+                upper = ducks_number / 10; // 32-bit upper
+                lower = ducks_number % 10; // 32-bit lower
 
                 binary_data = (upper << 32) | lower;
 
-                for (int i = 0; i < (int)(binary_data >> 32); i++) {
-                    int spacing = 8;
-                    for (int g = 0; g < 10; g++) {
+                for (i = 0; i < (int)(binary_data >> 32); i++) {
+                    for (g = 0; g < 10; g++) {
                         printf("   _");
                         printf("  ");
-                        for (int s = 0; s < spacing; s++) printf(" ");
+                        for (s = 0; s < spacing; s++) printf(" ");
                     }
                     printf("\n");
-                    for (int g = 0; g < 10; g++) {
+                    for (g = 0; g < 10; g++) {
                         printf("__(o)>");
-                        for (int s = 0; s < spacing; s++) printf(" ");
+                        for (s = 0; s < spacing; s++) printf(" ");
                     }
                     printf("\n");
-                    for (int g = 0; g < 10; g++) {
+                    for (g = 0; g < 10; g++) {
                         printf("\\___)");
                         printf(" ");
-                        for (int s = 0; s < spacing; s++) printf(" ");
+                        for (s = 0; s < spacing; s++) printf(" ");
                     }
                     printf("\n");
                 }
-                int spacing = 8;
-                int remainder = (int)(((binary_data << 32)) >> 32);
 
-                for (int g = 0; g < remainder; g++) {
+                remainder = (int)(((binary_data << 32)) >> 32);
+
+                for (g = 0; g < remainder; g++) {
                     printf("   _");
                     printf("  ");
-                    for (int s = 0; s < spacing; s++) printf(" ");
+                    for (s = 0; s < spacing; s++) printf(" ");
                 }
                 printf("\n");
-                for (int g = 0; g < remainder; g++) {
+                for (g = 0; g < remainder; g++) {
                     printf("__(o)>");
-                    for (int s = 0; s < spacing; s++) printf(" ");
+                    for (s = 0; s < spacing; s++) printf(" ");
                 }
                 printf("\n");
-                for (int g = 0; g < remainder; g++) {
+                for (g = 0; g < remainder; g++) {
                     printf("\\___)");
                     printf(" ");
-                    for (int s = 0; s < spacing; s++) printf(" ");
+                    for (s = 0; s < spacing; s++) printf(" ");
                 }
                 printf("\n");
                 break;
             }
 
             case 5: {
-                printf("please enter number\n");
                 int mystery_number = 0;
+                printf("please enter number\n");
                 scanf("%d", &mystery_number);
                 while (mystery_number <= 0) {
                     printf("Invalid number, please try again\n");
@@ -224,8 +235,9 @@ int main() {
                 }
                 while (mystery_number > 0) {
                     int current_digit = mystery_number % 10;
+                    int temp;
                     mystery_number = mystery_number / 10;
-                    int temp = mystery_number;
+                    temp = mystery_number;
                     while (temp > 0) {
                         if (temp % 10 == current_digit) {
                             printf("%d appears more than once!\n", current_digit);
