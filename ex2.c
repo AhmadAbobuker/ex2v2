@@ -25,14 +25,16 @@ int main() {
         ////choice&validity
         scanf("%d", &choice);
 
+        // Edge case: Handle 6 immediately to exit clean
         if (choice == 6) {
             printf("Good night! See you at the pond tomorrow.\n");
             return 0;
         }
 
+        // Edge case: Handle invalid inputs (including 0 and negatives)
         if (choice < 1 || choice > 6) {
             printf("Invalid option, please try again\n");
-            continue;
+            continue; // Go back to printing the menu immediately
         }
         ///////////////////////////////////////////////////
 
@@ -45,6 +47,7 @@ int main() {
                 ///            Validity Check
                 scanf("%d", &unity_number);
                 for (;;) {
+                    // Edge case: Instructions say "positive", so 0 is invalid
                     if (unity_number <= 0) {
                         printf("Invalid number, please try again\n");
                         scanf("%d", &unity_number);
@@ -74,6 +77,7 @@ int main() {
                 scanf("%d", &ducks_num);
                 //////////////////////////////////////
                 ////validity check
+                // Edge case: Must be positive AND <= 64 to fit in unsigned long long
                 while (ducks_num <= 0 || ducks_num > 64) {
                     printf("Invalid number, please try again\n");
                     scanf("%d", &ducks_num);
