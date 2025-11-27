@@ -25,7 +25,7 @@ int main() {
         ////choice&validity
         scanf("%d", &choice);
         for (;;) {
-            if ((choice < 0) || (choice > 6)) {
+            if ((choice < 1) || (choice > 6)) {
                 printf("Invalid option, please try again\n");
                 scanf("%d", &choice);
             } else {
@@ -43,7 +43,7 @@ int main() {
                 ///            Validity Check
                 scanf("%d", &unity_number);
                 for (;;) {
-                    if (unity_number < 0) {
+                    if (unity_number <= 0) {
                         printf("Invalid number, please try again\n");
                         scanf("%d", &unity_number);
                     } else {
@@ -72,10 +72,11 @@ int main() {
                 scanf("%d", &ducks_num);
                 //////////////////////////////////////
                 ////validity check
-                while (ducks_num < 0) {
+                while (ducks_num <= 0) {
                     printf("Invalid number, please try again\n");
                     scanf("%d", &ducks_num);
                 }
+                printf("you entered %d ducks\n", ducks_num);
                 ///////////////////////////////////////////
                 ///
                 for (int i = 0; i < ducks_num; i++) {
@@ -142,7 +143,7 @@ int main() {
                 ///
                 printf("please enter number of ducks:\n");
                 scanf("%d", &ducks_number);
-                while (ducks_number < 0) {
+                while (ducks_number <= 0) {
                     printf("Invalid number, please try again\n");
                     scanf("%d", &ducks_number);
                 }
