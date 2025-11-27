@@ -6,10 +6,17 @@ Assignment: 2
 
 #include <stdio.h>
 
+#define MAX_DUCKS 64
+#define OPTION_EXIT 6
+#define INVALID_OPT "Invalid option, please try again\n"
+#define INVALID_NUM "Invalid number, please try again\n"
+
 int main() {
     int choice = 0;
 
-    while (choice != 6) {
+    while (choice != OPTION_EXIT) {
+        /* ////////////////////////////////////////////////////////// */
+        /* /////Main menu */
         printf("Welcome to our games, please choose an option:\n");
         printf("1. Ducky's Unity Game\n");
         printf("2. The Memory Game\n");
@@ -17,18 +24,22 @@ int main() {
         printf("4. The Duck Parade\n");
         printf("5. The Mystery of the Repeated Digits\n");
         printf("6. Good Night Ducks\n");
+        /* ////////////////////////////////////////////////////////// */
 
+        /* ///////////////////////////////////////////////// */
+        /* ////choice&validity */
         scanf("%d", &choice);
 
-        if (choice == 6) {
+        if (choice == OPTION_EXIT) {
             printf("Good night! See you at the pond tomorrow.\n");
             return 0;
         }
 
         if (choice < 1 || choice > 6) {
-            printf("Invalid option, please try again\n");
+            printf(INVALID_OPT);
             continue;
         }
+        /* /////////////////////////////////////////////////// */
 
         switch (choice) {
             case 1: {
@@ -39,20 +50,25 @@ int main() {
                 printf("please enter a positive number:\n");
                 scanf("%d", &unity_number);
 
+                /* //////////////////////////////////////////// */
+                /* ///            Validity Check */
                 for (;;) {
                     if (unity_number <= 0) {
-                        printf("Invalid number, please try again\n");
+                        printf(INVALID_NUM);
                         scanf("%d", &unity_number);
                     } else {
                         break;
                     }
                 }
-
+                /* //////////////////////////////////////////// */
+                /* /////////Masking Phase in each bit to check the 1s */
                 for (i = 0; i < 32; i++) {
-                    if ((unity_number & (1 << i)) != 0) {
+                    if ((unity_number & (1U << i)) != 0) {
                         sumof1++;
                     }
                 }
+                /* ///////////////////////////////////////////////////////// */
+                /* /// */
                 printf("Ducky earns %d corns\n", sumof1);
                 break;
             }
@@ -65,21 +81,24 @@ int main() {
 
                 printf("please enter the number of ducks:\n");
                 scanf("%d", &ducks_num);
-
-                while (ducks_num <= 0 || ducks_num > 64) {
-                    printf("Invalid number, please try again\n");
+                /* ////////////////////////////////////// */
+                /* ////validity check */
+                while (ducks_num <= 0 || ducks_num > MAX_DUCKS) {
+                    printf(INVALID_NUM);
                     scanf("%d", &ducks_num);
                 }
                 printf("you entered %d ducks\n", ducks_num);
-
+                /* /////////////////////////////////////////// */
+                /* /// */
                 for (i = 0; i < ducks_num; i++) {
                     printf("duck %d do QUAK? 1 for yes, 0 for no\n", i + 1);
                     scanf("%d", &duck_choice);
 
                     if (duck_choice == 0 || duck_choice == 1) {
+                        /* Cast to ull to prevent overflow on old compilers */
                         binary_dataset |= ((unsigned long long)duck_choice << i);
                     } else {
-                        printf("Invalid number, please try again\n");
+                        printf(INVALID_NUM);
                         i--;
                     }
                 }
@@ -103,16 +122,18 @@ int main() {
 
                 printf("please enter the number\n");
                 scanf("%d", &professor_number);
-
+                /* ////////////////////////////////////// */
+                /* ////validity check */
                 while (professor_number < 0) {
-                    printf("Invalid number, please try again\n");
+                    printf(INVALID_NUM);
                     scanf("%d", &professor_number);
                 }
-
+                /* /////////////////////////////////////////// */
+                /* /// */
                 printf("please enter the exponent\n");
                 scanf("%d", &exponent);
                 while (exponent < 0) {
-                    printf("Invalid number, please try again\n");
+                    printf(INVALID_NUM);
                     scanf("%d", &exponent);
                 }
 
@@ -124,23 +145,47 @@ int main() {
             }
 
             case 4: {
+                /* ////////////////////////////////////////////////////////////////////////////// */
+                /* in this section of the program we need to excute the program in the next order
+                 a loop for drawing
+                 stages loop each stage corresponds with "number of lines" n
+                 n answers to mathmatics ,might be n%10 ?
+                 and an if statment if we are on any n above 0 not equal it mean new line is needed
+                 special case is the last loop last line  */
+                /* ////////////////////////////////////////////////////////////////////////////////// */
                 int ducks_number;
                 unsigned long long binary_data = 0;
                 unsigned long long upper;
                 unsigned long long lower;
                 int i, g, s;
-                int spacing = 8;
+                const int spacing = 8;
                 int remainder;
 
+                /* ////////validity  checker */
+                /* /// */
                 printf("please enter number of ducks:\n");
                 scanf("%d", &ducks_number);
                 while (ducks_number <= 0) {
-                    printf("Invalid number, please try again\n");
+                    printf(INVALID_NUM);
                     scanf("%d", &ducks_number);
                 }
 
-                upper = ducks_number / 10;
-                lower = ducks_number % 10;
+                /* ///////////// */
+
+                /* in this program we need to save 2 kinds of informations
+                  how many times are we looping in 10s
+                  and how many variables does the last line has
+                  ill approach this storing data in a 64 bit integer
+                  the first 32 bits are going to be the number we have for 10s
+                  the last 32 bits are how many varibles are in the last line
+                  although its not effcient for memory since our first vairable is an int
+                  so obviously the memory storing could be done in 8-12 bits each but
+                  memory isnt the case of the assignment */
+
+                upper = (unsigned long long)(ducks_number / 10);
+                lower = (unsigned long long)(ducks_number % 10);
+
+                /* Explicit cast to ensure shift happens in 64-bit space */
                 binary_data = (upper << 32) | lower;
 
                 for (i = 0; i < (int)(binary_data >> 32); i++) {
@@ -163,7 +208,7 @@ int main() {
                     printf("\n");
                 }
 
-                remainder = (int)(((binary_data << 32)) >> 32);
+                remainder = (int)((binary_data << 32) >> 32);
 
                 for (g = 0; g < remainder; g++) {
                     printf("   _");
@@ -190,7 +235,7 @@ int main() {
                 printf("please enter number\n");
                 scanf("%d", &mystery_number);
                 while (mystery_number <= 0) {
-                    printf("Invalid number, please try again\n");
+                    printf(INVALID_NUM);
                     scanf("%d", &mystery_number);
                 }
                 while (mystery_number > 0) {
